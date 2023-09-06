@@ -1,29 +1,37 @@
+import { useState } from 'react';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+  const [advice, setAdvice] = useState("");
+  const [count, setCount] = useState(0);
+  async function getAdvice (){
+    const res = await fetch("https://api.adviceslip.com/advice");
+    const data = await res.json();
+    setAdvice(data.slip.advice);
+    setCount((c) => c + 1);
+    console.log(data);
+
+  }
+
+  useEffect(function(){
+    getAdvice()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
-    </div>
+  <div>
+    <h1>{advice}</h1>
+    <button onClick={getAdvice}>Get Advice</button>
+    <Message count = {count}/>
+  </div>
   );
+  function Message(props){
+    return ( 
+      <h3>You have click <b>{props.count}</b> times on the button.</h3>
+    );
+  }
+
+
 }
 
 export default App;
